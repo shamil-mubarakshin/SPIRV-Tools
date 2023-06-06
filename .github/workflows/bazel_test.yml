@@ -23,14 +23,59 @@ jobs:
       - name: Download dependencies
         run: python3 utils/git-sync-deps
         
-      - name: 'list vc tools'
+      - name: 'list vc tools 1'
         run: |
           get-childitem -Path 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC'
           get-content 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\Microsoft.VCToolsVersion.v143.default.props'
           write-host "---"
           get-content 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.props'
           get-childitem 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\'
-        
+          
+      - name: install workloads
+        run: |
+          Set-Location "C:\Program Files (x86)\Microsoft Visual Studio\Installer\"
+          $InstallPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise"
+          $componentsToAdd = @(
+              "Microsoft.VisualStudio.Component.VC.14.34.17.4.ARM",
+              "Microsoft.VisualStudio.Component.VC.14.34.17.4.ARM.Spectre",
+              "Microsoft.VisualStudio.Component.VC.14.34.17.4.ARM64",
+              "Microsoft.VisualStudio.Component.VC.14.34.17.4.ARM64.Spectre",
+              "Microsoft.VisualStudio.Component.VC.14.34.17.4.x86.x64",
+              "Microsoft.VisualStudio.Component.VC.14.34.17.4.x86.x64.Spectre",
+              "Microsoft.VisualStudio.Component.VC.14.34.17.4.ATL",
+              "Microsoft.VisualStudio.Component.VC.14.34.17.4.ATL.Spectre",
+              "Microsoft.VisualStudio.Component.VC.14.34.17.4.ATL.ARM",
+              "Microsoft.VisualStudio.Component.VC.14.34.17.4.ATL.ARM.Spectre",
+              "Microsoft.VisualStudio.Component.VC.14.34.17.4.ATL.ARM64",
+              "Microsoft.VisualStudio.Component.VC.14.34.17.4.ATL.ARM64.Spectre",
+              "Microsoft.VisualStudio.Component.VC.14.34.17.4.MFC",
+              "Microsoft.VisualStudio.Component.VC.14.34.17.4.MFC.Spectre",
+              "Microsoft.VisualStudio.Component.VC.14.34.17.4.MFC.ARM",
+              "Microsoft.VisualStudio.Component.VC.14.34.17.4.MFC.ARM.Spectre",
+              "Microsoft.VisualStudio.Component.VC.14.34.17.4.MFC.ARM64",
+              "Microsoft.VisualStudio.Component.VC.14.34.17.4.MFC.ARM64.Spectre"
+          )
+          [string]$workloadArgs = $componentsToAdd | ForEach-Object {" --add " +  $_}
+          $Arguments = ('/c', "vs_installer.exe", 'modify', '--installPath', "`"$InstallPath`"",$workloadArgs, '--quiet', '--norestart', '--nocache')
+          $process = Start-Process -FilePath cmd.exe -ArgumentList $Arguments -Wait -PassThru -WindowStyle Hidden
+          if ($process.ExitCode -eq 0)
+          {
+              Write-Host "components have been successfully added"
+          }
+          else
+          {
+              Write-Host "components were not installed"
+              exit 1
+          }
+          
+      - name: 'list vc tools 2'
+        run: |
+          get-childitem -Path 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC'
+          get-content 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\Microsoft.VCToolsVersion.v143.default.props'
+          write-host "---"
+          get-content 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.props'
+          get-childitem 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\'
+          
       - name: Mount Bazel cache
         uses: actions/cache@v3
         with:
