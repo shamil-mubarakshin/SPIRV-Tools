@@ -1,0 +1,42 @@
+name: Build and Test with Bazel
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    timeout-minutes: 60
+
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+      - name: Download dependencies
+        run: python3 utils/git-sync-deps
+        
+      - name: 'list vc tools'
+        run: |
+          get-childitem -Path 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC'
+          get-content 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\Microsoft.VCToolsVersion.v143.default.props'
+          write-host "---"
+          get-content 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.props'
+          get-childitem 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\'
+        
+      - name: Mount Bazel cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.bazel/cache
+          key: bazel-cache-${{ runner.os }}         
+
+      - name: Build All (Windows)
+        run: bazel --output_user_root=~/.bazel/cache build //...
+      - name: Test All (Windows)
+        run: bazel --output_user_root=~/.bazel/cache test //...
