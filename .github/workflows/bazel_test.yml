@@ -14,7 +14,7 @@ jobs:
     timeout-minutes: 60
     runs-on: windows-latest
     env:
-      BAZEL_VC_FULL_VERSION: 14.36.32532
+      BAZEL_VC_FULL_VERSION: 14.35.32215
 
     steps:
       - uses: actions/checkout@v3
