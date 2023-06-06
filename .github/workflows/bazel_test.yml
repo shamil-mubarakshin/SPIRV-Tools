@@ -12,7 +12,7 @@ on:
 jobs:
   build:
     timeout-minutes: 60
-    runs-on: windows-latest
+    runs-on: windows-2019
 #     env:
 #       BAZEL_VC_FULL_VERSION: 14.35.32215
 
