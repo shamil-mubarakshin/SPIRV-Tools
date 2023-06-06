@@ -23,13 +23,13 @@ jobs:
       - name: Download dependencies
         run: python3 utils/git-sync-deps
         
-      - name: 'list vc tools 1'
-        run: |
-          get-childitem -Path 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC'
-          get-content 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\Microsoft.VCToolsVersion.v143.default.props'
-          write-host "---"
-          get-content 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.props'
-          get-childitem 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\'
+#       - name: 'list vc tools 1'
+#         run: |
+#           get-childitem -Path 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC'
+#           get-content 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\Microsoft.VCToolsVersion.v143.default.props'
+#           write-host "---"
+#           get-content 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.props'
+#           get-childitem 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\'
           
 #       - name: install workloads
 #         run: |
@@ -68,9 +68,9 @@ jobs:
 #               exit 1
 #           }
           
-      - name: 'list vc tools 2'
-        run: |
-          get-childitem -Path 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC'
+#       - name: 'list vc tools 2'
+#         run: |
+#           get-childitem -Path 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC'
           
       - name: Mount Bazel cache
         uses: actions/cache@v3
