@@ -1,4 +1,4 @@
-name: Build and Test with Bazel
+name: Debug - Build and Test with Bazel
 permissions:
   contents: read
 
@@ -12,8 +12,9 @@ on:
 jobs:
   build:
     timeout-minutes: 60
-
     runs-on: windows-latest
+    env:
+      BAZEL_VC_FULL_VERSION: 14.36.32532
 
     steps:
       - uses: actions/checkout@v3
